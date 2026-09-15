@@ -1,5 +1,6 @@
 ---- RUN COMMAND
 -- runghc .\tic.hs
+import Control.Concurrent (threadDelay)
 
 updateBoard :: Int -> [Int] -> [Int] -> [Int]
 updateBoard sign (cur:i) (l:ls)
@@ -16,7 +17,6 @@ printRow :: [Int] -> IO ()
 printRow r = do
     print (vak(r !! 0) ++ vak(r !! 1) ++ vak(r !! 2))
 
-
 printBoard :: [Int] -> IO ()
 printBoard board = do
     let row3 = take 3 board
@@ -27,16 +27,28 @@ printBoard board = do
     printRow(row2)
     printRow(row3)
    
-
-
 usrInput :: Int -> [Int] -> IO ()
 usrInput sign ls = do
     putStrLn "Your turn:"
     input <- getLine
     let num = read input :: Int
-    let board = (updateBoard sign [0,num-1] ls)
-    printBoard board
-    usrInput (if sign == 1 then sign+1 else sign-1) board
+    if (ls !! (num-1)) /= 0 
+        then usrInput sign ls 
+        else do
+        let board = (updateBoard sign [0,num-1] ls)
+        printBoard board
+        threadDelay 300000
+        cmpInput (if sign == 1 then sign+1 else sign-1) board 1
+
+cmpInput :: Int -> [Int] -> Int ->  IO()
+cmpInput sign ls num = do
+    if (ls !! (num-1)) /= 0 
+        then cmpInput sign ls (num+1)
+        else do
+        let board = (updateBoard sign [0,num-1] ls)
+        printBoard board
+        usrInput (if sign == 1 then sign+1 else sign-1) board
+
 
 
 main :: IO ()
@@ -45,4 +57,30 @@ main = do
     printBoard list
     usrInput 1 list
 
- 
+
+    -- Win combinations
+    -- 123 - 456 - 789 - 741 - 852 - 963 - 753 - 951
+
+
+
+
+-- winCheck :: Int -> [Int] -> IO()
+-- winCheck sign board = do
+--     let winCombos = [
+--                      [1,2,3], [4,5,6], [7,8,9],
+--                      [7,4,1], [8,5,2], [9,6,3],
+--                      [7,5,3], [9,5,1]
+--                     ]
+--     comboCheck sign board winCombos
+
+
+-- comboCheck :: Int -> [Int] -> [[Int]] -> IO ()
+-- comboCheck sign board combo = do
+--     if (combo.length > 0)
+--         then do 
+--             if (board !! ((combo !! 0) !! 0) == 0 
+--             && (board !! ((combo !! 0) !! 1)) /= 0 
+--             && (board !! ((combo !! 0) !! 2))) 
+--             then putStrLn sign + " Wins"
+--             else comboCheck sign board (combo drop 1)
+--         else 
