@@ -7,11 +7,24 @@ updateBoard sign (cur:i) (l:ls)
     | cur == (i !! 0) = (sign:ls)
     | otherwise = l : updateBoard sign [(cur+1),(i !! 0)] ls
 
+winCombos :: [[Int]]
+winCombos = [ 
+                [1,2,3], [4,5,6], [7,8,9],
+                [7,4,1], [8,5,2], [9,6,3],
+                [7,5,3], [9,5,1]
+            ]
+
 vak :: Int -> String
 vak x
     | x == 1 = " X "
     | x == 2 = " O "
     | otherwise = "   "
+
+xo :: Int -> Int
+xo sign 
+    | sign == 1 = sign+1 
+    | otherwise = sign-1
+
 
 printRow :: [Int] -> IO ()
 printRow r = do
@@ -27,29 +40,33 @@ printBoard board = do
     printRow(row2)
     printRow(row3)
    
-usrInput :: Int -> [Int] -> IO ()
+   
+usrInput :: Int -> [Int] -> IO Int
 usrInput sign ls = do
     putStrLn "Your turn:"
-    input <- getLine
-    let num = read input :: Int
-    if (ls !! (num-1)) /= 0 
+    input <- readLn
+    if (ls !! (input-1)) /= 0 
         then usrInput sign ls 
-        else do
-        let board = (updateBoard sign [0,num-1] ls)
-        printBoard board
-        threadDelay 300000
-        winCheck 1 board 
-        -- cmpInput (if sign == 1 then sign+1 else sign-1) board 1
+    else do
+        return input
+       
 
-cmpInput :: Int -> [Int] -> Int ->  IO()
-cmpInput sign ls num = do
-    if (ls !! (num-1)) /= 0 
-        then cmpInput sign ls (num+1)
-        else do
-        let board = (updateBoard sign [0,num-1] ls)
-        printBoard board
-        winCheck 2 board 
-        -- usrInput (if sign == 1 then sign+1 else sign-1) board
+cmpInput :: Int -> [Int]  ->  IO Int
+cmpInput sign ls = do
+    return (cmpBot ls 1)
+ 
+
+winCheck :: Int -> [Int] -> [[Int]] -> Bool
+winCheck sign board combo =
+    if not (null combo)
+        then 
+            --board[(combo[0][0]-1)] == sign 
+            if (board !! (((combo !! 0) !! 0)-1)) == sign
+                && (board !! (((combo !! 0) !! 1)-1)) == sign
+                && (board !! (((combo !! 0) !! 2)-1)) == sign
+            then True
+            else winCheck sign board (drop 1 combo)
+    else False
 
 
 
@@ -57,37 +74,25 @@ main :: IO ()
 main = do
     let list = [0,0,0,0,0,0,0,0,0]
     printBoard list
-    usrInput 1 list
-
-    -- Win combinations
-    -- 123 - 456 - 789 - 741 - 852 - 963 - 753 - 951
+    loop list 1
 
 
-winCheck :: Int -> [Int] -> IO()
-winCheck sign board = do
-    let winCombos = [
-                     [1,2,3], [4,5,6], [7,8,9],
-                     [7,4,1], [8,5,2], [9,6,3],
-                     [7,5,3], [9,5,1]
-                    ]
-    comboCheck sign board winCombos
+loop :: [Int] -> Int -> IO ()
+loop list sign = do
+    input <- if sign == 1
+        then usrInput sign list
+        else cmpInput sign list
+    let board = (updateBoard sign [0,input-1] list)
+    printBoard board
+    threadDelay 300000
+    if winCheck sign board winCombos
+        then 
+            print ("Player" ++ vak(sign) ++ "Wins ")
+        else loop board (xo(sign)) 
 
-
-comboCheck :: Int -> [Int] -> [[Int]] -> IO ()
-comboCheck sign board combo = do
-    if not (null combo)
-        then do 
-            --board[(combo[0][0]-1)] == sign 
-            if (board !! (((combo !! 0) !! 0)-1)) == sign
-                && (board !! (((combo !! 0) !! 1)-1)) == sign
-                && (board !! (((combo !! 0) !! 2)-1)) == sign
-            then putStrLn (show sign ++ " Wins")
-            else 
-                comboCheck sign board (drop 1 combo)
-    else 
-        -- TODO make return instead spaghetti 
-        if sign == 1 
-            then do 
-                cmpInput 2 board 1
-        else 
-            usrInput 1 board
+-- TODO MinMax algoritme -- 
+cmpBot :: [Int] -> Int -> Int
+cmpBot board num = do
+    if (board !! (num-1)) /= 0 
+        then cmpBot board (num+1)
+    else num
