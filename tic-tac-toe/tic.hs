@@ -38,7 +38,8 @@ usrInput sign ls = do
         let board = (updateBoard sign [0,num-1] ls)
         printBoard board
         threadDelay 300000
-        cmpInput (if sign == 1 then sign+1 else sign-1) board 1
+        winCheck 1 board 
+        -- cmpInput (if sign == 1 then sign+1 else sign-1) board 1
 
 cmpInput :: Int -> [Int] -> Int ->  IO()
 cmpInput sign ls num = do
@@ -47,7 +48,8 @@ cmpInput sign ls num = do
         else do
         let board = (updateBoard sign [0,num-1] ls)
         printBoard board
-        usrInput (if sign == 1 then sign+1 else sign-1) board
+        winCheck 2 board 
+        -- usrInput (if sign == 1 then sign+1 else sign-1) board
 
 
 
@@ -57,30 +59,35 @@ main = do
     printBoard list
     usrInput 1 list
 
-
     -- Win combinations
     -- 123 - 456 - 789 - 741 - 852 - 963 - 753 - 951
 
 
+winCheck :: Int -> [Int] -> IO()
+winCheck sign board = do
+    let winCombos = [
+                     [1,2,3], [4,5,6], [7,8,9],
+                     [7,4,1], [8,5,2], [9,6,3],
+                     [7,5,3], [9,5,1]
+                    ]
+    comboCheck sign board winCombos
 
 
--- winCheck :: Int -> [Int] -> IO()
--- winCheck sign board = do
---     let winCombos = [
---                      [1,2,3], [4,5,6], [7,8,9],
---                      [7,4,1], [8,5,2], [9,6,3],
---                      [7,5,3], [9,5,1]
---                     ]
---     comboCheck sign board winCombos
-
-
--- comboCheck :: Int -> [Int] -> [[Int]] -> IO ()
--- comboCheck sign board combo = do
---     if (combo.length > 0)
---         then do 
---             if (board !! ((combo !! 0) !! 0) == 0 
---             && (board !! ((combo !! 0) !! 1)) /= 0 
---             && (board !! ((combo !! 0) !! 2))) 
---             then putStrLn sign + " Wins"
---             else comboCheck sign board (combo drop 1)
---         else 
+comboCheck :: Int -> [Int] -> [[Int]] -> IO ()
+comboCheck sign board combo = do
+    if not (null combo)
+        then do 
+            --board[(combo[0][0]-1)] == sign 
+            if (board !! (((combo !! 0) !! 0)-1)) == sign
+                && (board !! (((combo !! 0) !! 1)-1)) == sign
+                && (board !! (((combo !! 0) !! 2)-1)) == sign
+            then putStrLn (show sign ++ " Wins")
+            else 
+                comboCheck sign board (drop 1 combo)
+    else 
+        -- TODO make return instead spaghetti 
+        if sign == 1 
+            then do 
+                cmpInput 2 board 1
+        else 
+            usrInput 1 board
