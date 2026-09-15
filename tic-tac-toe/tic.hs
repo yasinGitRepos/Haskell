@@ -84,7 +84,7 @@ loop list sign = do
         else cmpInput sign list
     let board = (updateBoard sign [0,input-1] list)
     printBoard board
-    threadDelay 300000
+    threadDelay 150000 
     if winCheck sign board winCombos
         then 
             print ("Player" ++ vak(sign) ++ "Wins ")
