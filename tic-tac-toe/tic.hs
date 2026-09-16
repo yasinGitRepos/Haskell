@@ -45,7 +45,7 @@ usrInput :: Int -> [Int] -> IO Int
 usrInput sign ls = do
     putStrLn "Your turn:"
     input <- readLn
-    if (ls !! (input-1)) /= 0 
+    if input > 9 || (ls !! (input-1)) /= 0 
         then usrInput sign ls 
     else do
         return input
@@ -53,7 +53,8 @@ usrInput sign ls = do
 
 cmpInput :: Int -> [Int]  ->  IO Int
 cmpInput sign ls = do
-    return (cmpBot ls 1)
+    board <- minMax ls 1
+    return board
  
 
 winCheck :: Int -> [Int] -> [[Int]] -> Bool
@@ -72,7 +73,7 @@ winCheck sign board combo =
 
 main :: IO ()
 main = do
-    let list = [0,0,0,0,0,0,0,0,0]
+    let list = [0,0,0,0,0,0,0,2,2]
     printBoard list
     loop list 1
 
@@ -96,3 +97,17 @@ cmpBot board num = do
     if (board !! (num-1)) /= 0 
         then cmpBot board (num+1)
     else num
+
+-- -- TODO MinMax algoritme -- 
+minMax :: [Int] -> Int -> IO Int
+minMax board num = do
+
+    let n = cmpBot board num;
+    let nb = updateBoard 2 [0,n-1] board
+    if winCheck 2 nb winCombos
+        then return n
+    else 
+        minMax board (n+1)
+        
+
+
