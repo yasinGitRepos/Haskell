@@ -61,7 +61,6 @@ winCheck :: Int -> [Int] -> [[Int]] -> Bool
 winCheck sign board combo =
     if not (null combo)
         then 
-            --board[(combo[0][0]-1)] == sign 
             if (board !! (((combo !! 0) !! 0)-1)) == sign
                 && (board !! (((combo !! 0) !! 1)-1)) == sign
                 && (board !! (((combo !! 0) !! 2)-1)) == sign
