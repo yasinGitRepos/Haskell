@@ -35,7 +35,7 @@ printBoard board = do
     let row3 = take 3 board
     let row2 = take 3 (drop 3 board)
     let row1 = drop 6 board
-    putStr "\ESC[H\ESC[J"
+    -- putStr "\ESC[H\ESC[J"
     printRow(row1)
     printRow(row2)
     printRow(row3)
@@ -51,28 +51,23 @@ usrInput sign ls = do
         return input
        
 
-cmpInput :: Int -> [Int]  ->  IO Int
-cmpInput sign ls = do
-    board <- minMax ls 1
-    return board
- 
 
 winCheck :: Int -> [Int] -> [[Int]] -> Bool
-winCheck sign board combo =
-    if not (null combo)
+winCheck sign board combos =
+    if not (null combos)
         then 
-            if (board !! (((combo !! 0) !! 0)-1)) == sign
-                && (board !! (((combo !! 0) !! 1)-1)) == sign
-                && (board !! (((combo !! 0) !! 2)-1)) == sign
+            if (board !! (((combos !! 0) !! 0)-1)) == sign
+                && (board !! (((combos !! 0) !! 1)-1)) == sign
+                && (board !! (((combos !! 0) !! 2)-1)) == sign
             then True
-            else winCheck sign board (drop 1 combo)
+            else winCheck sign board (drop 1 combos)
     else False
 
 
 
 main :: IO ()
 main = do
-    let list = [0,0,0,0,0,0,0,2,2]
+    let list = [0,0,0,0,0,0,0,0,0]
     printBoard list
     loop list 1
 
@@ -81,32 +76,46 @@ loop :: [Int] -> Int -> IO ()
 loop list sign = do
     input <- if sign == 1
         then usrInput sign list
-        else cmpInput sign list
+        else do
+            result <- miniMax sign list 1
+            return (result !! 1)
     let board = (updateBoard sign [0,input-1] list)
+    print input
     printBoard board
-    threadDelay 150000 
+    -- threadDelay 150000 
     if winCheck sign board winCombos
         then 
             print ("Player" ++ vak(sign) ++ "Wins ")
         else loop board (xo(sign)) 
+    
 
--- TODO MinMax algoritme -- 
-cmpBot :: [Int] -> Int -> Int
-cmpBot board num = do
-    if (board !! (num-1)) /= 0 
-        then cmpBot board (num+1)
-    else num
-
--- -- TODO MinMax algoritme -- 
-minMax :: [Int] -> Int -> IO Int
-minMax board num = do
-
-    let n = cmpBot board num;
-    let nb = updateBoard 2 [0,n-1] board
-    if winCheck 2 nb winCombos
-        then return n
-    else 
-        minMax board (n+1)
-        
+-- cpmInput :: Int -> [Int] -> Int -> Int
+-- cpmInput sign board num = do 
+--     if miniMax sign board num !! 0 ==
 
 
+miniMax :: Int -> [Int] -> Int -> IO [Int] 
+miniMax sign board num
+    | winCheck 2 board winCombos = return [10,num]
+    | winCheck 1 board winCombos = return [(-10),num]
+    | all (/= 0) board = return [0,num]
+    | num > length board = return [0,num]
+    | board !! (num - 1) /=0 = miniMax sign board (num +1)
+    | otherwise = do
+        let nb = updateBoard sign [0, num -1] board
+        score <- miniMax (xo sign) nb num
+        nextScore <- miniMax sign board (num +1)
+        -- printBoard nb
+        -- print nb
+        -- print score
+        let s = score !! 0
+        let ns = nextScore !! 0
+        let np = nextScore !! 1
+
+        if sign == 2
+            then if (s > ns) 
+                then return [s, num]
+                else return [ns, np -1]         
+            else if (s < ns) 
+                then return [s, num]
+                else return [ns, np -1]
