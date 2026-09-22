@@ -124,15 +124,14 @@ miniMax board sign
     | winCheck usr board winCombos = -10
     | all (/= 0) board = 0
     | sign == bot =
-        maximum
-            [ miniMax (makeMove bot move board) usr
-            | move <- availableMoves board
-            ]
+        maximum $ map
+            (\move -> miniMax (makeMove bot move board) usr)
+            (availableMoves board)
     | otherwise =
-        minimum
-            [ miniMax (makeMove usr move board) bot
-            | move <- availableMoves board
-            ]
+        minimum $ map
+            (\move -> miniMax (makeMove usr move board) bot)
+            (availableMoves board)
+        
 
 availableMoves :: [Int] -> [Int]
 availableMoves board =
