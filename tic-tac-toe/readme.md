@@ -2,7 +2,8 @@
 # Rapport Functioneel Paradigma Opdracht
 Auteur: Yasin Geddi <br>
 Student nr: 1577820 <br>
-Klas: 
+Klas: ITN-CNI-A-s <br>
+Docent: Dennis Breuker
 
 
 
@@ -49,18 +50,17 @@ Ik vond dit een leuke opdracht, het was erg uitdagend. Het was lastig om te moet
 
 
 ## Conclusie 
-– Samenvatting van de belangrijkste leerpunten.
+Minimax is een erg geschikt algoritme voor een tic-tac-toe. Door dat het alle mogelijkheden afgaat is het in dit geval onverslaanbaar. Het enige nadeel is dat het de eerste beurten zoveel mogelijkheden moet afgaan dat het even kan duren voordat de zet is gevonden, de big O is dan ook O(n!). Hier zijn wel oplossingen voor zoals pruning, maar dat valt buiten de scope van deze opdracht. 
+
 
 ## Bronvermelding 
-– Vermeldt alle bronnen die je gebruik hebt. Als je gebruik maakt van GenAI (zoals ChatGPT) vermeld dit dan en neem links op naar de volledige conversaties. Geef dan ook in je verslag aan hoe je GenAI hebt gebruikt (waarom heb je welke prompt gebruikt en wat deed je met de output).
+Voor de opdracht heb ik een aantal keer AI gebruikt voor ondersteuning. Ik heb AI vooral gebruikt om voorbeelden code voorbeelden te genereren om bijvoorbeeld de verschillende talen met elkaar te vergelijken, of om concepten uit te leggen. 
+Daarnaast wat terug gelezen uit de lesstof, zoals recursie, en video's op youtube gekeken. 
 
 
-
-[Minimax Algorithm](https://www.youtube.com/watch?v=5y2a0Zhgq0U)
-<br>
-[Haskell](https://www.haskell.org/)
-<br>
-[Lesstof](https://aim-cni.github.io/app/docs/Week%204/Les%201/Lesprogramma)
+[Minimax Algorithm](https://www.youtube.com/watch?v=5y2a0Zhgq0U)<br>
+[Haskell](https://www.haskell.org/)<br>
+[Lesstof](https://aim-cni.github.io/app/docs/category/course-info-app)
 
 
 
