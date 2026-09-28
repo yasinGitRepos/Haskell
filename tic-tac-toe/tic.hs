@@ -3,7 +3,7 @@
 
 import Text.Read (readMaybe)
 
-
+-- recursive loop die sign in goede vakje zet 
 updateBoard :: Int -> [Int] -> [Int] -> [Int]
 updateBoard sign (cur:i) (l:ls)
     | cur == (i !! 0) = (sign:ls)
@@ -31,26 +31,20 @@ vak x
     | x == bot  = " O "
     | otherwise = "   "
 
+-- wissel sign
 xo :: Int -> Int
 xo sign 
     | sign == usr = sign+1 
     | otherwise = sign-1
 
-
 printRow :: [Int] -> IO ()
-printRow row = do
-    putStrLn (vak(row !! 0) ++ vak(row !! 1) ++ vak(row !! 2))
+printRow row = putStrLn (concatMap vak row)
 
 printBoard :: [Int] -> IO ()
 printBoard board = do
-    let row3 = take 3 board
-    let row2 = take 3 (drop 3 board)
-    let row1 = drop 6 board
     putStr "\ESC[H\ESC[J"
-    printRow(row1)
-    printRow(row2)
-    printRow(row3)
-   
+    mapM_ printRow [drop 6 board, take 3 (drop 3 board), take 3 board]
+
    
 usrInput :: Int -> [Int] -> IO Int
 usrInput sign list = do
@@ -69,14 +63,13 @@ usrInput sign list = do
 winCheck :: Int -> [Int] -> [[Int]] -> Bool
 winCheck sign board combos =
     if not (null combos)
-        then 
+        then  -- board[(combo[0][0]-1)] == sign 
             if (board !! (((combos !! 0) !! 0)-1)) == sign
                 && (board !! (((combos !! 0) !! 1)-1)) == sign
                 && (board !! (((combos !! 0) !! 2)-1)) == sign
             then True
             else winCheck sign board (drop 1 combos)
     else False
-
 
 
 main :: IO ()
