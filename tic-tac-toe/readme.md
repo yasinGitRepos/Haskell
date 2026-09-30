@@ -54,10 +54,11 @@ Minimax is een erg geschikt algoritme voor een tic-tac-toe. Door dat het alle mo
 
 
 ## Bronvermelding 
-Voor de opdracht heb ik een aantal keer AI gebruikt voor ondersteuning. Ik heb AI vooral gebruikt om voorbeelden code voorbeelden te genereren om bijvoorbeeld de verschillende talen met elkaar te vergelijken, of om concepten uit te leggen. 
-Daarnaast wat terug gelezen uit de lesstof, zoals recursie, en video's op youtube gekeken. 
+Voor de opdracht heb ik een aantal keer AI gebruikt voor ondersteuning. Ik heb AI vooral gebruikt om voorbeeld code te genereren om bijvoorbeeld de verschillende talen met elkaar te vergelijken, of om concepten uit te leggen. Voor de rest heb ik vaak dingen gegoogled als ik vast liep, vaak kreeg ik dan ook meteen een antwoord van gemini. Bijvoorbeeld hoe map werkt in Haskell.
+Daarnaast heb ik ook wat terug gelezen uit de lesstof, zoals recursie, en de gelinkte video's.
+De video van code train heeft me erg geholpen om het Minimax algoritme te begrijpen.
 
-
+[Haskell Beginner](https://www.youtube.com/watch?v=gK0hMxJhqwM)<br>
 [Minimax Algorithm](https://www.youtube.com/watch?v=5y2a0Zhgq0U)<br>
 [Haskell](https://www.haskell.org/)<br>
 [Lesstof](https://aim-cni.github.io/app/docs/category/course-info-app)
